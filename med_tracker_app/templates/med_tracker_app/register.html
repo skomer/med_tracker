@@ -1,0 +1,23 @@
+
+{% extends "base.html" %}
+
+
+
+<!-- change redirect 'firstsignin' to go to user dashboard, ie med_tracker_app/<user_id>/dashboard -->
+
+{% block content %}
+
+<form id="signup" name="signup" action="/med_tracker_app/firstsignin/" method="POST">{% csrf_token %}
+	<label for="username" name="username">Username</label>
+	<input class="text username" name="username" type="text" /><br>
+	
+	<label for="email" name="email">Email Address</label>
+	<input class="text" name="email" type="text" /><br>
+
+	<label for="password" name="password">Password</label>
+	<input class="text" name="password" type="text" /><br>
+
+	<input class="btn" type="submit" value="Sign Up" />
+</form>
+
+{% endblock %}

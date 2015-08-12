@@ -1,0 +1,34 @@
+{% extends "med_tracker_app/base.html" %}
+
+
+{% block content %}
+
+<h3>A nice big title for user_dash.html</h3>
+
+{{ good_login }}
+
+<p>Here is a dashboard with all your stuff.</p>
+
+<!-- A form to add meds -->
+<!-- A form to add events -->
+<!-- a table or similar to view existing meds and events -->
+<!-- worry about amending meds/events later -->
+<!-- a way of organising the timeline - html5? -->
+
+<form id="add_event" name="add_event" action="/med_tracker_app/insert_action_here/" method="POST">
+	Date: <input type="date" name="date" value=""><br><br>
+	Event type: <input type="text" name="type" value=""><br><br>
+	Description: <input type="text" name="description" value=""><br><br>
+	Dosage: <input type="text" name="dosage" value=""><br><br>
+	Medication: <input type="text" name="medication" value=""><br><br>
+	<input class="btn" type="submit" value="Submit" />
+</form>
+
+<br><br>
+<a href="/med_tracker_app/logout/">Log out</a>
+
+
+
+
+
+{% endblock %}

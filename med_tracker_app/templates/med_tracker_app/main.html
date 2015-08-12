@@ -2,9 +2,11 @@
 {% extends "med_tracker_app/base.html" %}
 
 
-<!-- change redirect 'firstsignin' to go to user dashboard, ie med_tracker_app/<user_id>/dashboard -->
-
 {% block content %}
+
+<h3>A nice big title for main.html</h3>
+
+
 
 <form id="signup" name="signup" action="/med_tracker_app/firstsignin/" method="POST">{% csrf_token %}
 	<label for="username" name="username">Username</label>
@@ -20,6 +22,12 @@
 </form>
 
 <br><br>
+
+{{ failed_login }}
+{{ logout }}
+
+<br><br>
+
 Log in here:
 <form id="login" name="login" action="/med_tracker_app/login/" method="POST">{% csrf_token %}
 	<label for="username" name="username">Username</label>
@@ -30,8 +38,5 @@ Log in here:
 
 	<input class="btn" type="submit" value="Log In" />
 </form>
-
-
-
 
 {% endblock %}

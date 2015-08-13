@@ -10,6 +10,7 @@ class Medication(models.Model):
 	generic_name = models.CharField(max_length=128)
 	brand_names = models.CharField(max_length=128)
 	user = models.ForeignKey(User)
+	units = models.CharField(max_length=128)
 
 
 

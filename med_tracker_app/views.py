@@ -1,8 +1,13 @@
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 from django.http import HttpResponse
 from django.contrib.auth.models import User
 from django.contrib.auth import authenticate, login, logout
 from django.template.context_processors import csrf
+from django.conf import settings
+from django.contrib.auth.decorators import login_required
+from models import Medication, Event
+
+
 
 
 # Create your views here.
@@ -39,21 +44,37 @@ def login_auth(request):
 		return render(request, 'med_tracker_app/main.html', {'failed_login': "The username or password was incorrect."})
 
 
+# 	# take request from website
+# 	# request will be something like, load all events for this med and this user in this date range.
+# 	# user id you will get via authenticate somehow
+# 	# med and associated units user will specify at the top of the page
+# 	# with this info, plus what you get back from the database, you could start to build a hash or something that you can then display?
+# 	# like taking json data and displaying it from a hash?
+
+
+@login_required#(redirect_field_name='/register/')
+def add_med(request):
+	generic_name = request.POST.get('generic_name')
+	units = request.POST.get('units')
+	user = request.user.pk
+	new_med_entry = Medication()	#.objects.create(generic_name=generic_name, units, user)
+	new_med_entry.generic_name = generic_name
+	new_med_entry.units = units
+	new_med_entry.user = request.user
+	new_med_entry.save()
+	return render(request, 'med_tracker_app/landing.html', {})
+
+
 def log_out(request):
 	logout(request)
 	return render(request, 'med_tracker_app/main.html', {'logout': "You have successfully logged out."})
-
-
-# def lookup(request,num):
-# 	p = Product.objects.get(pk=num)
-# 	return render(request, 'ecommerce_app/singleproduct.html', {})
-
 
 
 def user_account(request):
 	return render('')
 
 
+@login_required#(redirect_field_name='/register/')
 def user_dash(request):
 	return render(request, 'med_tracker_app/user_dash.html')
 

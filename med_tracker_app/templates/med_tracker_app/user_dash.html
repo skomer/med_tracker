@@ -15,7 +15,28 @@
 <!-- worry about amending meds/events later -->
 <!-- a way of organising the timeline - html5? -->
 
-<form id="add_event" name="add_event" action="/med_tracker_app/insert_action_here/" method="POST">
+
+<p>Here are your meds:</p>
+<br>
+
+{{ your_meds }}
+
+
+<br>
+
+<h4>Create / add a medication here</h4>
+<form id="add_medication" name="add_medication" action="/med_tracker_app/add_med/" method="POST">{% csrf_token %}
+	Enter the medication: <input type="text" name="generic_name" value=""><br><br>
+	Enter the units you will use for this medication: <input type="text" name="units" value=""><br><br>
+	<input class="btn" type="submit" value="Submit" />
+</form>
+
+
+
+<br><br>
+
+<h4>Create an event here</h4>
+<form id="add_event" name="add_event" action="/med_tracker_app/insert_action_here/" method="POST">{% csrf_token %}
 	Date: <input type="date" name="date" value=""><br><br>
 	Event type: <input type="text" name="type" value=""><br><br>
 	Description: <input type="text" name="description" value=""><br><br>

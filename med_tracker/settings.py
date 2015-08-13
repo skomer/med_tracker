@@ -53,6 +53,10 @@ MIDDLEWARE_CLASSES = (
 
 PROJECT_ROOT = os.path.abspath(os.path.dirname(__file__))
 
+LOGIN_URL = '/med_tracker_app/register'
+# LOGIN_REDIRECT_URL = '/register'
+
+
 ROOT_URLCONF = 'med_tracker.urls'
 
 TEMPLATES = [

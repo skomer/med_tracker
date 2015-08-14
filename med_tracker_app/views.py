@@ -8,8 +8,6 @@ from django.contrib.auth.decorators import login_required
 from models import Medication, Event
 
 
-
-
 # Create your views here.
 
 
@@ -20,15 +18,6 @@ def idontknowwhatyet(request):
 
 def load_registration_page(request):
 	return render(request, 'med_tracker_app/main.html', {})
-
-
-def create_user(request):
-	username = request.POST.get('username')
-	email  = request.POST.get('email')
-	password = request.POST.get('password')
-	user = User.objects.create_user(username,email,password)
-	user.save()
-	return render(request, 'med_tracker_app/user_dash.html', {})
 
 
 def login_auth(request):
@@ -42,6 +31,16 @@ def login_auth(request):
 	else:
 	    # the authentication system was unable to verify the username and password
 		return render(request, 'med_tracker_app/main.html', {'failed_login': "The username or password was incorrect."})
+
+
+def create_user(request):
+	username = request.POST.get('username')
+	email  = request.POST.get('email')
+	password = request.POST.get('password')
+	user = User.objects.create_user(username,email,password)
+	user.save()
+	return render(request, 'med_tracker_app/user_dash.html', {})
+
 
 
 # 	# take request from website
@@ -76,5 +75,23 @@ def user_account(request):
 
 @login_required#(redirect_field_name='/register/')
 def user_dash(request):
-	return render(request, 'med_tracker_app/user_dash.html')
+	user_id = request.user.pk
+	user_meds = []
+	# if the med's foreign key is the same as the user_id of the user currently logged in, then get that med
+	for item in Medication.objects.values_list('generic_name', 'user_id'):
+		if item[1] == user_id:
+			user_meds.append(item[0])
+	return render(request, 'med_tracker_app/user_dash.html', { 'your_meds' : user_meds })
+
+
+
+# def orderproduct(request,id):
+# 	o = Order.objects.get(pk=1)
+# 	product = Product.objects.get(pk=id)
+# 	op = OrderProduct()
+# 	op.order = o
+# 	op.product = product
+# 	op.quantity = 1
+# 	op.save()
+# 	return render(request, 'ecommerce_app/order.html', {"products" : o.product_set.all()})
 

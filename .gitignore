@@ -1,0 +1,9 @@
+Put in this file the paths to files that you want git to ignore
+
+e.g.
+
+ignorethis.txt
+
+topsecretinfo.txt
+
+db.sqlite3

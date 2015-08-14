@@ -1,5 +1,5 @@
-{% extends "med_tracker_app/base.html" %}
 
+{% extends "med_tracker_app/base.html" %}
 
 {% block content %}
 
@@ -16,11 +16,15 @@
 <!-- a way of organising the timeline - html5? -->
 
 
-<p>Here are your meds:</p>
-<br>
 
-{{ your_meds }}
 
+<p>Here are your meds:<br>
+	{% for thing in your_meds %}
+		<li>{{ thing }}</li>
+	{% endfor %}
+</p>
+
+<!-- {{ your_meds.0|stringformat:"s" }} -->
 
 <br>
 

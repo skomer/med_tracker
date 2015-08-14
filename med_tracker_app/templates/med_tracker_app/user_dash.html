@@ -1,8 +1,9 @@
 
 {% extends "med_tracker_app/base.html" %}
 
-{% block content %}
 
+
+{% block content %}
 <h3>A nice big title for user_dash.html</h3>
 
 {{ good_login }}
@@ -17,16 +18,35 @@
 
 
 
+    <form method="GET">
+    	<p>
+	        <label for="simple-select">Here are your meds:</label>
+	        <select name="simple-select" class="standard-demo">
+		        {% for thing in your_meds %}
+		        	<option>{{ thing }}</option>
+		        {% endfor %}
+	        </select>
+    	</p>
+        <input type="submit"/>
+    </form>
 
-<p>Here are your meds:<br>
-	{% for thing in your_meds %}
-		<li>{{ thing }}</li>
-	{% endfor %}
-</p>
+    <script>
+    	$('.standard-demo').select2Buttons();
+    	$('select[name=js-callback-select]').change(function() {
+    		alert('Changed to ' + $(this).val());
+    	});
+    	$('select[name=no-default-select]').select2Buttons({noDefault: true});
+    </script>
+
 
 <!-- {{ your_meds.0|stringformat:"s" }} -->
 
 <br>
+
+
+
+
+
 
 <h4>Create / add a medication here</h4>
 <form id="add_medication" name="add_medication" action="/med_tracker_app/add_med/" method="POST">{% csrf_token %}
@@ -53,7 +73,6 @@
 <a href="/med_tracker_app/logout/">Log out</a>
 
 
-
-
-
 {% endblock %}
+
+

@@ -39,6 +39,8 @@ def create_user(request):
 	password = request.POST.get('password')
 	user = User.objects.create_user(username,email,password)
 	user.save()
+	user_login = authenticate(username=username, password=password)
+	login(request, user_login)
 	return render(request, 'med_tracker_app/user_dash.html', {})
 
 

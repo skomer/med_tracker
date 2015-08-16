@@ -11,9 +11,8 @@ from models import Medication, Event
 # Create your views here.
 
 
-def idontknowwhatyet(request):
-	print "bluegreenred"
-	return render('')
+def load_home(request):
+	return render(request, 'med_tracker_app/main.html')
 
 
 def load_registration_page(request):
@@ -44,13 +43,12 @@ def create_user(request):
 	return render(request, 'med_tracker_app/user_dash.html', {})
 
 
-
-# 	# take request from website
-# 	# request will be something like, load all events for this med and this user in this date range.
-# 	# user id you will get via authenticate somehow
-# 	# med and associated units user will specify at the top of the page
-# 	# with this info, plus what you get back from the database, you could start to build a hash or something that you can then display?
-# 	# like taking json data and displaying it from a hash?
+# take request from website
+# request will be something like, load all events for this med and this user in this date range.
+# user id you will get via authenticate somehow
+# med and associated units user will specify at the top of the page
+# with this info, plus what you get back from the database, you could start to build a hash or something that you can then display?
+# like taking json data and displaying it from a hash?
 
 
 @login_required#(redirect_field_name='/register/')
@@ -66,11 +64,24 @@ def add_med(request):
 	return render(request, 'med_tracker_app/landing.html', {})
 
 
+# @login_required
+# def add_event(request, selected_med):
+# 	date = request.POST.get('date')
+# 	event_type = request.POST.get('event_type')
+# 	description = request.POST.get('description')
+# 	dosage = request.POST.get('dosage')
+	
+# 	medication_id = 
+# 	user_id = request.user.pk
+# 	return render(request, 'med_tracker_app/landing.html', {})
+
+
 def log_out(request):
 	logout(request)
 	return render(request, 'med_tracker_app/main.html', {'logout': "You have successfully logged out."})
 
 
+@login_required
 def user_account(request):
 	return render('')
 
@@ -86,14 +97,4 @@ def user_dash(request):
 	return render(request, 'med_tracker_app/user_dash.html', { 'your_meds' : user_meds })
 
 
-
-# def orderproduct(request,id):
-# 	o = Order.objects.get(pk=1)
-# 	product = Product.objects.get(pk=id)
-# 	op = OrderProduct()
-# 	op.order = o
-# 	op.product = product
-# 	op.quantity = 1
-# 	op.save()
-# 	return render(request, 'ecommerce_app/order.html', {"products" : o.product_set.all()})
 

@@ -12,7 +12,6 @@ urlpatterns = [
 	url(r'^dashboard/', views.user_dash, name='user_dash'),
 	url(r'^account/', views.user_account, name='user_account'),
 	url(r'^add_med/', views.add_med, name='add_med'),
-	# url(r'^add_event/', views.add_event, name='add_event'),
-
+	url(r'^add_event/', views.add_event, name='add_event'),
 
 ]

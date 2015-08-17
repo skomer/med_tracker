@@ -2,37 +2,32 @@
 {% extends "med_tracker_app/base.html" %}
 
 {% block content %}
-<h3>A nice big title for user_dash.html</h3>
+<!-- <h3>A nice big title for user_dash.html</h3> -->
+
+<a href="/med_tracker_app/account">Your account</a><br>
 
 {{ good_login }}
 
 <p>Here is a dashboard with all your stuff.</p>
-	
-    <form method="GET">
-    	<p>
-	        <label for="simple-select">Here are your meds:</label>
-	        <select name="selected" class="standard-demo">
-		        {% for thing in your_meds %}
-		        	<option>{{ thing }}</option>
-		        {% endfor %}
-	        </select>
-    	</p>
-    	<br><br>
-        <input type="submit"/>
-    </form>
 
-<!-- {{ your_meds.0|stringformat:"s" }} -->
 
-    <script>
-    	$('.standard-demo').select2Buttons();
-    	$('select[name=js-callback-select]').change(function() {
-    		alert('Changed to ' + $(this).val());
-    	});
-    	$('select[name=no-default-select]').select2Buttons({noDefault: true});
-    </script>
+{% url 'add_event' as event_url %}
+{% if event_url %}
+	<strong>{{ new_event }}</strong>
+{% endif %}
 
-<br>
+{% url 'add_med' as med_url %}
+{% if med_url %}
+	<strong>{{ new_med }}</strong><br>
+	<label for="simple-select">Here are your meds:</label>
+		<select name="selected" class="standard-demo">
+			{% for thing in your_meds %}
+			<option>{{ thing }}</option>
+			{% endfor %}
+		</select>
+{% endif %}
 
+<br><br>
 
 <h4>Create / add a medication here</h4>
 <form id="add_medication" name="add_medication" action="/med_tracker_app/add_med/" method="POST">{% csrf_token %}
@@ -43,21 +38,39 @@
 
 <br><br>
 
-<h4>Create an event here</h4>
-<!-- Put the simple-select here are your meds thing here, without its form, so that user selecting a med is now part of this form. Then all the info in this form will be submitted simultaneously and I won't need to feed in the med fk to the function separately.
-I can still hide most of this form until user wants to display it by clicking "I want to make a new event" -->
-<form id="add_event" name="add_event" action="/med_tracker_app/add_event/" method="POST">{% csrf_token %}
-	Date: <input type="date" name="date" value=""><br><br>
-	Event type: <input type="text" name="event_type" value=""><br><br>
-	Description: <input type="text" name="description" value=""><br><br>
-	Dosage: <input type="text" name="dosage" value="">Automatically put the units here, depending on which med is selected<br><br>
-	<input class="btn" type="submit" value="Submit" />
-</form>
 
-<br><br>
-<a href="/med_tracker_app/logout/">Log out</a>
+	<form id="add_event" name="add_event" action="/med_tracker_app/add_event/" method="POST">{% csrf_token %}
+		<p>
+			<label for="simple-select">Here are your events:</label>
+			<select name="selected" class="standard-demo">
+				{% for thing in your_events %}
+				<option>{{ thing }}</option>
+				{% endfor %}
+			</select>
+		</p>
+		<br><br>
+		<h4>Create an event here</h4>
+
+		Date: <input type="date" name="date" value=""><br><br>
+		Event type: <input type="text" name="event_type" value=""><br><br>
+		Description: <input type="text" name="description" value=""><br><br>
+		Dosage: <input type="text" name="dosage" value="">Automatically put the units here, depending on which med is selected<br><br>
+		<input class="btn" type="submit" value="Submit" />
+	</form>
+
+	<script>
+		$('.standard-demo').select2Buttons();
+		$('select[name=js-callback-select]').change(function() {
+			alert('Changed to ' + $(this).val());
+		});
+		$('select[name=no-default-select]').select2Buttons({noDefault: true});
+	</script>
 
 
-{% endblock %}
+	<br><br>
+	<a href="/med_tracker_app/logout/">Log out</a>
+
+
+	{% endblock %}
 
 

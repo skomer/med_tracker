@@ -1,0 +1,20 @@
+
+{% extends "med_tracker_app/base.html" %}
+
+{% block content %}
+
+<h3>User account</h3>
+
+<a href="/med_tracker_app/dashboard">Dashboard</a><br>
+
+<p>
+	Username: {{ username }}<br>
+	Email: {{ user_email }}
+</p>
+
+
+<br><br>
+<a href="/med_tracker_app/logout/">Log out</a>
+
+{% endblock %}
+

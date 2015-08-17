@@ -61,19 +61,26 @@ def add_med(request):
 	new_med_entry.units = units
 	new_med_entry.user = request.user
 	new_med_entry.save()
-	return render(request, 'med_tracker_app/landing.html', {})
+	return render(request, 'med_tracker_app/user_dash.html', { 'new_med' : "You added a new medication."})
 
 
-# @login_required
-# def add_event(request, selected_med):
-# 	date = request.POST.get('date')
-# 	event_type = request.POST.get('event_type')
-# 	description = request.POST.get('description')
-# 	dosage = request.POST.get('dosage')
-	
-# 	medication_id = 
-# 	user_id = request.user.pk
-# 	return render(request, 'med_tracker_app/landing.html', {})
+@login_required
+def add_event(request):
+	date = request.POST.get('date')
+	event_type = request.POST.get('event_type')
+	description = request.POST.get('description')
+	dosage = request.POST.get('dosage')
+	medication_id = 1
+	user_id = request.user.pk
+	new_event_entry = Event()
+	new_event_entry.date = date
+	new_event_entry.event_type = event_type
+	new_event_entry.description = description
+	new_event_entry.dosage = dosage
+	new_event_entry.medication_id = medication_id
+	new_event_entry.user_id = user_id
+	new_event_entry.save()
+	return render(request, 'med_tracker_app/user_dash.html', { 'new_event' : "You added a new event." })
 
 
 def log_out(request):
@@ -83,7 +90,13 @@ def log_out(request):
 
 @login_required
 def user_account(request):
-	return render('')
+	user_id = request.user.pk
+	for item in User.objects.values_list('username', 'id', 'email'):
+		if item[1] == user_id:
+			print item
+			username = item[0]
+			user_email = item[2]
+	return render(request, 'med_tracker_app/account.html', { 'username' : username, 'user_email' : user_email })
 
 
 @login_required#(redirect_field_name='/register/')
@@ -94,7 +107,11 @@ def user_dash(request):
 	for item in Medication.objects.values_list('generic_name', 'user_id'):
 		if item[1] == user_id:
 			user_meds.append(item[0])
-	return render(request, 'med_tracker_app/user_dash.html', { 'your_meds' : user_meds })
+	user_events = []
+	for item in Event.objects.values_list('date', 'user_id'):
+		if item[1] == user_id:
+			user_events.append(item[0])
+	return render(request, 'med_tracker_app/user_dash.html', { 'your_meds' : user_meds, 'your_events' : user_events })
 
 
 

@@ -1,5 +1,6 @@
 from django.shortcuts import render, redirect
-from django.http import HttpResponse
+from django.core.urlresolvers import reverse
+from django.http import HttpResponse, HttpResponseRedirect
 from django.contrib.auth.models import User
 from django.contrib.auth import authenticate, login, logout
 from django.template.context_processors import csrf
@@ -61,7 +62,9 @@ def add_med(request):
 	new_med_entry.units = units
 	new_med_entry.user = request.user
 	new_med_entry.save()
-	return render(request, 'med_tracker_app/user_dash.html', { 'new_med' : "You added a new medication."})
+	# use redirect here
+	return HttpResponseRedirect(reverse('med_tracker_app:user_dash'))
+	# return render(request, 'med_tracker_app/user_dash.html', { 'new_med' : "You added a new medication."})
 
 
 @login_required
@@ -70,7 +73,7 @@ def add_event(request):
 	event_type = request.POST.get('event_type')
 	description = request.POST.get('description')
 	dosage = request.POST.get('dosage')
-	medication_id = 1
+	medication_id = int(request.POST.get('select_med'))
 	user_id = request.user.pk
 	new_event_entry = Event()
 	new_event_entry.date = date
@@ -80,17 +83,21 @@ def add_event(request):
 	new_event_entry.medication_id = medication_id
 	new_event_entry.user_id = user_id
 	new_event_entry.save()
-	return render(request, 'med_tracker_app/user_dash.html', { 'new_event' : "You added a new event." })
+	#return render(request, 'med_tracker_app/user_dash.html', { 'new_event' : "You added a new event." })
+	return HttpResponseRedirect(reverse('med_tracker_app:user_dash'))
+
 
 
 def log_out(request):
 	logout(request)
+	# use redirect here
 	return render(request, 'med_tracker_app/main.html', {'logout': "You have successfully logged out."})
 
 
 @login_required
 def user_account(request):
 	user_id = request.user.pk
+	# can I use a request/query thing here, like in user_dash() below, rather than a for loop?
 	for item in User.objects.values_list('username', 'id', 'email'):
 		if item[1] == user_id:
 			print item
@@ -102,15 +109,10 @@ def user_account(request):
 @login_required#(redirect_field_name='/register/')
 def user_dash(request):
 	user_id = request.user.pk
-	user_meds = []
 	# if the med's foreign key is the same as the user_id of the user currently logged in, then get that med
-	for item in Medication.objects.values_list('generic_name', 'user_id'):
-		if item[1] == user_id:
-			user_meds.append(item[0])
-	user_events = []
-	for item in Event.objects.values_list('date', 'user_id'):
-		if item[1] == user_id:
-			user_events.append(item[0])
+	# use the following syntax for one-to-many queries, rather than using a for loop
+	user_meds = request.user.medication_set.all()
+	user_events = request.user.event_set.all()
 	return render(request, 'med_tracker_app/user_dash.html', { 'your_meds' : user_meds, 'your_events' : user_events })
 
 

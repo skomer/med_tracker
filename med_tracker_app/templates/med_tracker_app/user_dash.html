@@ -2,6 +2,8 @@
 {% extends "med_tracker_app/base.html" %}
 
 {% block content %}
+
+
 <!-- <h3>A nice big title for user_dash.html</h3> -->
 
 <a href="/med_tracker_app/account">Your account</a><br>
@@ -13,21 +15,11 @@
 
 {% url 'add_event' as event_url %}
 {% if event_url %}
-	<strong>{{ new_event }}</strong>
+<strong>{{ new_event }}</strong>
 {% endif %}
 
-{% url 'add_med' as med_url %}
-{% if med_url %}
-	<strong>{{ new_med }}</strong><br>
-	<label for="simple-select">Here are your meds:</label>
-		<select name="selected" class="standard-demo">
-			{% for thing in your_meds %}
-			<option>{{ thing }}</option>
-			{% endfor %}
-		</select>
-{% endif %}
 
-<br><br>
+<br>
 
 <h4>Create / add a medication here</h4>
 <form id="add_medication" name="add_medication" action="/med_tracker_app/add_med/" method="POST">{% csrf_token %}
@@ -36,41 +28,66 @@
 	<input class="btn" type="submit" value="Submit" />
 </form>
 
-<br><br>
+<br>
 
 
-	<form id="add_event" name="add_event" action="/med_tracker_app/add_event/" method="POST">{% csrf_token %}
-		<p>
-			<label for="simple-select">Here are your events:</label>
-			<select name="selected" class="standard-demo">
-				{% for thing in your_events %}
-				<option>{{ thing }}</option>
-				{% endfor %}
-			</select>
-		</p>
-		<br><br>
-		<h4>Create an event here</h4>
-
-		Date: <input type="date" name="date" value=""><br><br>
-		Event type: <input type="text" name="event_type" value=""><br><br>
-		Description: <input type="text" name="description" value=""><br><br>
-		Dosage: <input type="text" name="dosage" value="">Automatically put the units here, depending on which med is selected<br><br>
-		<input class="btn" type="submit" value="Submit" />
-	</form>
-
-	<script>
-		$('.standard-demo').select2Buttons();
-		$('select[name=js-callback-select]').change(function() {
-			alert('Changed to ' + $(this).val());
-		});
-		$('select[name=no-default-select]').select2Buttons({noDefault: true});
-	</script>
-
-
+<form id="add_event" name="add_event" action="/med_tracker_app/add_event/" method="POST">{% csrf_token %}
+	<p>
+		<label for="simple-select">Here are your events:</label>
+		<select name="selected" class="standard-demo">
+			{% for thing in your_events %}
+			<option>{{ thing.medication.generic_name }}, {{ thing.date }}</option>
+			{% endfor %}
+		</select>
+	</p>
 	<br><br>
-	<a href="/med_tracker_app/logout/">Log out</a>
+	<h4>Create an event here</h4>
+	<label for="simple-select2">Here are your meds:</label>
+	<select name="select_med" class="standard-demo" id="btn1">
+		{% for thing in your_meds %}
+		<option id="opt_{{thing.id}}" value="{{ thing.id }}">{{ thing.generic_name }}, {{ thing.units }}</option>
+		{% endfor %}
+	</select>
+	<br><br>
+	Date: <input type="date" name="date" value=""><br><br>
+	Event type: <input type="text" name="event_type" value=""><br><br>
+	Description: <input type="text" name="description" value=""><br><br>
+	Dosage: <input type="text" name="dosage" value="">
+	<div id="dose_units">
+		The units for your selected medication will display here
+	</div>
+	<br><br>
+	<input class="btn" type="submit" value="Submit" />
+</form>
 
 
-	{% endblock %}
+<script>
+	$(document).ready(function(){
+	    $("#btn1").click(function(){
+	        $("#dose_units").text("Hello world!");
+	    });
+	});
+</script>
 
+
+<script>
+	$('.standard-demo').select2Buttons();
+	$('select[name=select_med]').change(function() {
+//			alert('Changed to ' + $(this).val());
+		// console.log($(this).val());
+		opt_id = $(this).val();
+		opt_value = $("#opt_"+opt_id)[0].innerHTML;
+		//use split on ,
+		units_value = opt_value.split(",");
+		$("#dose_units").text(units_value[1]);
+	});
+	$('select[name=no-default-select]').select2Buttons({noDefault: true});
+</script>
+
+
+<br><br>
+<a href="/med_tracker_app/logout/">Log out</a>
+
+
+{% endblock %}
 

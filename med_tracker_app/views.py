@@ -70,13 +70,16 @@ def add_med(request):
 @login_required
 def add_event(request):
 	date = request.POST.get('date')
+	time = request.POST.get('time')
 	event_type = request.POST.get('event_type')
 	description = request.POST.get('description')
 	dosage = request.POST.get('dosage')
 	medication_id = int(request.POST.get('select_med'))
 	user_id = request.user.pk
+	datetime = str(date) + " " + time
+	print "datetime", datetime
 	new_event_entry = Event()
-	new_event_entry.date = date
+	new_event_entry.date = datetime
 	new_event_entry.event_type = event_type
 	new_event_entry.description = description
 	new_event_entry.dosage = dosage
@@ -87,11 +90,10 @@ def add_event(request):
 	return HttpResponseRedirect(reverse('med_tracker_app:user_dash'))
 
 
-
 def log_out(request):
 	logout(request)
-	# use redirect here
-	return render(request, 'med_tracker_app/main.html', {'logout': "You have successfully logged out."})
+	return HttpResponseRedirect(reverse('med_tracker_app:load_home'))
+	#return render(request, 'med_tracker_app/main.html', {'logout': "You have successfully logged out."})
 
 
 @login_required
@@ -100,7 +102,6 @@ def user_account(request):
 	# can I use a request/query thing here, like in user_dash() below, rather than a for loop?
 	for item in User.objects.values_list('username', 'id', 'email'):
 		if item[1] == user_id:
-			print item
 			username = item[0]
 			user_email = item[2]
 	return render(request, 'med_tracker_app/account.html', { 'username' : username, 'user_email' : user_email })
@@ -113,7 +114,10 @@ def user_dash(request):
 	# use the following syntax for one-to-many queries, rather than using a for loop
 	user_meds = request.user.medication_set.all()
 	user_events = request.user.event_set.all()
-	return render(request, 'med_tracker_app/user_dash.html', { 'your_meds' : user_meds, 'your_events' : user_events })
+	# for thing in user_events:
+	# 	print thing.date
+	time_list = ["01:00", "02:00", "03:00", "04:00", "05:00", "06:00", "07:00", "08:00", "09:00", "10:00", "11:00", "12:00 (midday)", "13:00", "14:00", "15:00", "16:00", "17:00", "18:00", "19:00", "20:00", "21:00", "22:00", "23:00", "24:00 (midnight)",]
+	return render(request, 'med_tracker_app/user_dash.html', { 'your_meds' : user_meds, 'your_events' : user_events, 'range' : time_list })
 
 
 

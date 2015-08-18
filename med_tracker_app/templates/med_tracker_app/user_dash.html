@@ -36,7 +36,7 @@
 		<label for="simple-select">Here are your events:</label>
 		<select name="selected" class="standard-demo">
 			{% for thing in your_events %}
-			<option>{{ thing.medication.generic_name }}, {{ thing.date }}</option>
+			<option>{{ thing.medication.generic_name }}, {{ thing.date|date:'d F Y' }}</option>
 			{% endfor %}
 		</select>
 	</p>
@@ -49,7 +49,15 @@
 		{% endfor %}
 	</select>
 	<br><br>
-	Date: <input type="date" name="date" value=""><br><br>
+	Date: <input type="date" name="date" value="">
+	Approximate time (optional):
+	<select name="time">
+		<option selected disabled>Select a time</option>
+		{% for hour in range %}
+			<option value="{{ hour }}">{{ hour }}</option>
+		{% endfor %}
+	</select>
+	<br><br>
 	Event type: <input type="text" name="event_type" value=""><br><br>
 	Description: <input type="text" name="description" value=""><br><br>
 	Dosage: <input type="text" name="dosage" value="">
@@ -60,6 +68,10 @@
 	<input class="btn" type="submit" value="Submit" />
 </form>
 
+
+
+<br><br>
+<a href="/med_tracker_app/logout/">Log out</a>
 
 <script>
 	$(document).ready(function(){
@@ -74,7 +86,6 @@
 	$('.standard-demo').select2Buttons();
 	$('select[name=select_med]').change(function() {
 //			alert('Changed to ' + $(this).val());
-		// console.log($(this).val());
 		opt_id = $(this).val();
 		opt_value = $("#opt_"+opt_id)[0].innerHTML;
 		//use split on ,
@@ -83,10 +94,6 @@
 	});
 	$('select[name=no-default-select]').select2Buttons({noDefault: true});
 </script>
-
-
-<br><br>
-<a href="/med_tracker_app/logout/">Log out</a>
 
 
 {% endblock %}

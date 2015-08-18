@@ -44,14 +44,6 @@ def create_user(request):
 	return render(request, 'med_tracker_app/user_dash.html', {})
 
 
-# take request from website
-# request will be something like, load all events for this med and this user in this date range.
-# user id you will get via authenticate somehow
-# med and associated units user will specify at the top of the page
-# with this info, plus what you get back from the database, you could start to build a hash or something that you can then display?
-# like taking json data and displaying it from a hash?
-
-
 @login_required#(redirect_field_name='/register/')
 def add_med(request):
 	generic_name = request.POST.get('generic_name')
@@ -112,12 +104,10 @@ def user_dash(request):
 	user_id = request.user.pk
 	# if the med's foreign key is the same as the user_id of the user currently logged in, then get that med
 	# use the following syntax for one-to-many queries, rather than using a for loop
-	user_meds = request.user.medication_set.all()
-	user_events = request.user.event_set.all()
-	# for thing in user_events:
-	# 	print thing.date
-	time_list = ["01:00", "02:00", "03:00", "04:00", "05:00", "06:00", "07:00", "08:00", "09:00", "10:00", "11:00", "12:00 (midday)", "13:00", "14:00", "15:00", "16:00", "17:00", "18:00", "19:00", "20:00", "21:00", "22:00", "23:00", "24:00 (midnight)",]
-	return render(request, 'med_tracker_app/user_dash.html', { 'your_meds' : user_meds, 'your_events' : user_events, 'range' : time_list })
+	your_meds = request.user.medication_set.all().order_by('generic_name')
+	your_events = request.user.event_set.all().order_by('date')
+	time_list = ["01:00", "02:00", "03:00", "04:00", "05:00", "06:00", "07:00", "08:00", "09:00", "10:00", "11:00", "12:00 (midday)", "13:00", "14:00", "15:00", "16:00", "17:00", "18:00", "19:00", "20:00", "21:00", "22:00", "23:00", "24:00 (midnight)"]
+	return render(request, 'med_tracker_app/user_dash.html', { 'your_meds' : your_meds, 'your_events' : your_events, 'range' : time_list })
 
 
 

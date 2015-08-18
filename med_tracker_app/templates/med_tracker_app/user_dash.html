@@ -50,9 +50,8 @@
 	</select>
 	<br><br>
 	Date: <input type="date" name="date" value="">
-	Approximate time (optional):
 	<select name="time">
-		<option selected disabled>Select a time</option>
+		<option selected disabled>Select a time (optional)</option>
 		{% for hour in range %}
 			<option value="{{ hour }}">{{ hour }}</option>
 		{% endfor %}

@@ -111,7 +111,7 @@ STATIC_URL = '/static/'
 import dj_database_url
 
 if os.environ.has_key('DATABASE_URL') and dj_database_url.config():
-DATABASES['default'] = dj_database_url.config()
+    DATABASES['default'] = dj_database_url.config()
 
 import os BASE_DIR = os.path.dirname(os.path.abspath(file)) STATIC_ROOT = 'staticfiles' STATIC_URL = '/static/'
 
